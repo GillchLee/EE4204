@@ -104,11 +104,12 @@ float str_cli(FILE *fp, int sockfd, long *len)
   /*** the whole file is loaded in the buffer. ***/
 	buf[lsize] ='\0';									//append the end byte
 	gettimeofday(&sendt, NULL);							//get the current time
-	srand((unsigned int)time);
+	
 	int Error_prob = 10* ERROR_PROB;
 
 	while(ci<= lsize)
 	{
+		srand((unsigned int)time);
 		unsigned int random_value = rand % 1000;		// make error
 		if ((lsize+1-ci) <= DATALEN)
 			slen = lsize+1-ci;
