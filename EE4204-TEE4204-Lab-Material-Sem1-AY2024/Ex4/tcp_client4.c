@@ -110,7 +110,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 	while(ci<= lsize)
 	{
 		srand((unsigned int)time);
-		unsigned int random_value = rand % 1000;		// make error
+		unsigned int random_value = rand() % 1000;		// make error
 		if ((lsize+1-ci) <= DATALEN)
 			slen = lsize+1-ci;
 		else 
