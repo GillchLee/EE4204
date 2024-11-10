@@ -104,17 +104,18 @@ float str_cli(FILE *fp, int sockfd, long *len)
   /*** the whole file is loaded in the buffer. ***/
 	buf[lsize] ='\0';									//append the end byte
 	gettimeofday(&sendt, NULL);							//get the current time
-
-	int random_value = srand((unsigned int)time) % 1000;
+	srand((unsigned int)time);
 	int Error_prob = 10* ERROR_PROB;
 
 	while(ci<= lsize)
 	{
+		unsigned int random_value = rand % 1000;		// make error
 		if ((lsize+1-ci) <= DATALEN)
 			slen = lsize+1-ci;
 		else 
 			slen = DATALEN;
 		memcpy(sends, (buf+ci), slen);
+
 		if(random_value > Error_prob)					// make error.
 			n = send(sockfd, &sends, slen, 0);
 		if(n == -1) {
