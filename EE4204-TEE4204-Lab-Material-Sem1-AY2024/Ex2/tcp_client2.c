@@ -101,27 +101,30 @@ float str_cli(FILE *fp, int sockfd, long *len)
 
 	sends.len = lsize;									//the data length
 	sends.num = 0;
-	n=send(sockfd, &sends, (sends.len+HEADLEN), 0);		//send the data in one packet
-	if (n == -1)	{			
-		printf("error sending data\n");
-		exit(1);
+	int sent = 0;
+	while(!sent){
+		n=send(sockfd, &sends, (sends.len+HEADLEN), 0);		//send the data in one packet
+		if (n == -1)	{			
+			printf("error sending data\n");
+			exit(1);
+		}
+		else printf("%d data sent", n);
+		n=recv(sockfd, &acks, 2, 0);
+		if ( n> 0 && ((acks.len == 0) && (acks.num == 1))) {	        //receive ACK or NACK
+			printf("ACK received \n");
+			sent = 1;
+		}
+		else      
+		{
+			printf("ACK not received...\n");
+			sleep(1);
+		}
+	
 	}
-	else printf("%d data sent", n);
-	if ((n=recv(sockfd, &acks, 2, 0)) == -1) {	        //receive ACK or NACK
-		printf("error receiving data\n");
-		exit(1);
-	}
-	if ((acks.len == 0) && (acks.num == 1))         //if it is ACK
-	{
-		gettimeofday(&recvt, NULL);                                                         //get current time
-		tv_sub(&recvt, &sendt);                                                                 // get the whole trans time
-		time_inv += (recvt.tv_sec)*1000.0 + (recvt.tv_usec)/1000.0;
-		return(time_inv);
-	}
-	else	{
-		return(-1);
-		printf("Error in transmission\n");
-	}
+	gettimeofday(&recvt, NULL);                                                         //get current time
+	tv_sub(&recvt, &sendt);                                                                 // get the whole trans time
+	time_inv += (recvt.tv_sec)*1000.0 + (recvt.tv_usec)/1000.0;
+	return(time_inv);
 }
 
 void tv_sub(struct  timeval *out, struct timeval *in)

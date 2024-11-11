@@ -1,3 +1,4 @@
+// headfile for TCP program
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -12,25 +13,19 @@
 #include <fcntl.h>
 #include <sys/time.h>
 
-#include <time.h>
-
-#define ACK_LOSS_PROBABILITY 0.3 // 30% 확률로 ACK를 보내지 않음
-
 #define NEWFILE (O_WRONLY|O_CREAT|O_TRUNC)
 #define MYTCP_PORT 4950
 #define MYUDP_PORT 5350
-#define MAXSIZE 30008
-#define MAXLEN 30000
-#define MAXINT 0x7fffffff
-#define BUFSIZE 31000
-#define N 1
+#define DATALEN 500
+#define BUFSIZE 60000
+#define PACKLEN 508
 #define HEADLEN 8
 
 struct pack_so			//data packet structure
 {
 uint32_t num;				// the sequence number
 uint32_t len;					// the packet length
-char data[MAXLEN];	//the packet data
+char data[DATALEN];	//the packet data
 };
 
 struct ack_so

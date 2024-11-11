@@ -3,7 +3,6 @@ tcp_client.c: the source file of the client in tcp transmission
 ********************************/
 
 #include "headsock.h"
-#include "time.h"	//for random
 
 float str_cli(FILE *fp, int sockfd, long *len);                       //transmission function
 void tv_sub(struct  timeval *out, struct timeval *in);	    //calcu the time interval between out and in
@@ -18,7 +17,6 @@ int main(int argc, char **argv)
 	struct hostent *sh;
 	struct in_addr **addrs;
 	FILE *fp;
-
 
 	if (argc != 2) {
 		printf("parameters not match");
@@ -61,6 +59,11 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	
+	if((fp = fopen ("myfile.txt","r+t")) == NULL)
+	{
+		printf("File doesn't exit\n");
+		exit(0);
+	}
 
 	ti = str_cli(fp, sockfd, &len);                       //perform the transmission and receiving
 	rt = (len/(float)ti);                                         //caculate the average transmission rate
@@ -83,24 +86,25 @@ float str_cli(FILE *fp, int sockfd, long *len)
 	struct timeval sendt, recvt;
 	ci = 0;
 
-// allocate memory to contain the whole file.
-	buf = (char *) malloc (MAXSIZE);
-	if (buf == NULL) {printf("Malloc error"); exit (2);}
+	fseek (fp , 0 , SEEK_END);
+	lsize = ftell (fp);
+	rewind (fp);
+	printf("The file length is %d bytes\n", (int)lsize);
+	printf("the packet length is %d bytes\n",DATALEN);
 
-  // copy the message into the buffer.
-	if (fgets(sends, MAXSIZE, fp) ==NULL ) {
-		pritnf("error input\n");
-	}
-	
+// allocate memory to contain the whole file.
+	buf = (char *) malloc (lsize);
+	if (buf == NULL) exit (2);
+
+  // copy the file into the buffer.
+	fread (buf,1,lsize,fp);
+
   /*** the whole file is loaded in the buffer. ***/
-	// fgets can add null. buf[lsize] ='\0';									//append the end byte
+	buf[lsize] ='\0';									//append the end byte
 	gettimeofday(&sendt, NULL);							//get the current time
-	
-	lsize = strlen(buf);
-	
 	while(ci<= lsize)
 	{
-		if ((lsize+1-ci) <= DATALEN)	//datalen is segmenet size
+		if ((lsize+1-ci) <= DATALEN)
 			slen = lsize+1-ci;
 		else 
 			slen = DATALEN;
@@ -110,18 +114,16 @@ float str_cli(FILE *fp, int sockfd, long *len)
 			printf("send error!");								//send the data
 			exit(1);
 		}
-		n = recv(sockfd, &ack, 2, 0);
-		if ( n > 0 && ack.num == 1 && ack.len == 0 ) // ACK received success                                   //receive the ack
-		{
-			printf(" ACK received\n");
-			ci += slen;
-		}
-		else {
-			printf("error in transmission\n");
-			sleep(1);	
-		}
+		ci += slen;
 	}
-		gettimeofday(&recvt, NULL);
+	if ((n= recv(sockfd, &ack, 2, 0))==-1)                                   //receive the ack
+	{
+		printf("error when receiving\n");
+		exit(1);
+	}
+	if (ack.num != 1|| ack.len != 0)
+		printf("error in transmission\n");
+	gettimeofday(&recvt, NULL);
 	*len= ci;                                                         //get current time
 	tv_sub(&recvt, &sendt);                                                                 // get the whole trans time
 	time_inv += (recvt.tv_sec)*1000.0 + (recvt.tv_usec)/1000.0;
