@@ -72,10 +72,15 @@ void str_ser(int sockfd)
 	struct ack_so ack;
 	int end, n = 0, ci, lsize=1;
 	ci = end = ack.num = 0;
+	srand((unsigned)time(NULL));
+
 while(!end){
+	n= recv(sockfd, &recvs, MAXSIZE, 0);
+	if(recvs.num == 1)
+		printf("\n*****fail received*****\n");
 	while(ci < lsize)
 	{
-		if ((n= recv(sockfd, &recvs, MAXSIZE, 0))==-1)                                   //receive the packet
+		if (n==-1)                                   //receive the packet
 		{
 			printf("receiving error!\n");
 			return;
@@ -94,13 +99,19 @@ while(!end){
 	ack.len = 0;
 	ack.num = 1;
 //	memcpy(buf, recvs.data, recvs.len);
-	if((double)rand() / RAND_MAX >= ACK_LOSS_PROBABILITY){
+	double random = (double)rand() / RAND_MAX;
+	if(random >= ACK_LOSS_PROBABILITY){
 		send(sockfd, &ack, 2, 0);     
 		           //send ACK or NACK
 		end=1;
 	}
-	else
+	else{
 		printf("ACK lost");
+		while(1){
+			n = recv(sockfd, &acks,2,0);
+
+		}
+	}
 }
 	if((fp = fopen ("myTCPreceive.txt","wt")) == NULL)
 	{

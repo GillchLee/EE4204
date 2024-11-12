@@ -108,7 +108,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 			printf("error sending data\n");
 			exit(1);
 		}
-		else printf("%d data sent", n);
+		else printf("%d data sent\n", n);
 		n=recv(sockfd, &acks, 2, 0);
 		if ( n> 0 && ((acks.len == 0) && (acks.num == 1))) {	        //receive ACK or NACK
 			printf("ACK received \n");
@@ -117,6 +117,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 		else      
 		{
 			printf("ACK not received...\n");
+			sends.num=1;
 			sleep(1);
 		}
 	
