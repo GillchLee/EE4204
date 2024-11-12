@@ -73,7 +73,7 @@ void str_ser(int sockfd)
 	int end, n = 0, ci, lsize=1;
 	ci = end = ack.num = 0;
 	srand((unsigned)time(NULL));
-
+	printf(" [[[[[[[[[%d, %d, %d]]]]]]]]]\n ",end,ci,lsize);
 while(!end){
 	printf("**loop again**");
 	n= recv(sockfd, &recvs, MAXSIZE, 0);
@@ -81,6 +81,7 @@ while(!end){
 		printf("\n*****fail received*****\n");
 	while(ci < lsize)
 	{
+		printf("**flag1**");
 		if (n==-1)                                   //receive the packet
 		{
 			printf("receiving error!\n");
