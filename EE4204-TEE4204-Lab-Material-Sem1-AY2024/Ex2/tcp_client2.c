@@ -111,13 +111,17 @@ float str_cli(FILE *fp, int sockfd, long *len)
 	sends.num = 0;
 	int sent = 0;
 	while(!sent){
+		printf("***loop start\n");
 		n=send(sockfd, &sends, (sends.len+HEADLEN), 0);		//send the data in one packet
 		if (n == -1)	{			
 			printf("error sending data\n");
 			exit(1);
 		}
 		else printf("%d data sent\n", n);
+
+		printf("receive strat\n");
 		n=recv(sockfd, &acks, 2, 0);
+		printf("what n is %d\n",n);
 		if ( n> 0 && ((acks.len == 0) && (acks.num == 1))) {	        //receive ACK or NACK
 			printf("ACK received \n");
 			sent = 1;
