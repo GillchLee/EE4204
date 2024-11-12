@@ -75,6 +75,7 @@ void str_ser(int sockfd)
 	srand((unsigned)time(NULL));
 
 while(!end){
+	printf("**loop again**");
 	n= recv(sockfd, &recvs, MAXSIZE, 0);
 	if(recvs.num == 1)
 		printf("\n*****fail received*****\n");
@@ -101,16 +102,13 @@ while(!end){
 //	memcpy(buf, recvs.data, recvs.len);
 	double random = (double)rand() / RAND_MAX;
 	if(random >= ACK_LOSS_PROBABILITY){
+		printf("send ack\n");
 		send(sockfd, &ack, 2, 0);     
 		           //send ACK or NACK
 		end=1;
 	}
 	else{
 		printf("ACK lost");
-		while(1){
-			n = recv(sockfd, &acks,2,0);
-
-		}
 	}
 }
 	if((fp = fopen ("myTCPreceive.txt","wt")) == NULL)
