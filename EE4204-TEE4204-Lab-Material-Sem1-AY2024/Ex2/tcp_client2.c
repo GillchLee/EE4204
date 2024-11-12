@@ -18,6 +18,10 @@ int main(int argc, char **argv)
 	struct in_addr **addrs;
 	FILE *fp;
 
+    struct timeval timeout;
+    timeout.tv_sec = 5;   // 초 단위
+    timeout.tv_usec = 0;  // 마이크로초 단위 (0으로 설정하면 정확히 5초)
+	
 	if (argc != 2) {
 		printf("parameters not match");
 	}
@@ -52,7 +56,11 @@ int main(int argc, char **argv)
 	ser_addr.sin_port = htons(MYTCP_PORT);
 	memcpy(&(ser_addr.sin_addr.s_addr), *addrs, sizeof(struct in_addr));
 	bzero(&(ser_addr.sin_zero), 8);
+
 	ret = connect(sockfd, (struct sockaddr *)&ser_addr, sizeof(struct sockaddr));         //connect the socket with the remote host
+	//** time out setting.
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+	//**
 	if (ret != 0) {
 		printf ("connection failed\n"); 
 		close(sockfd); 
