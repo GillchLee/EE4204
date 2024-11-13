@@ -107,7 +107,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 	buf = (char *) malloc (lsize);
 	if (buf == NULL) exit (2);
 	//
-	fread (sends.data,1,lsize,fp);					//read the file data into the data area in packet
+	fread (buf,1,lsize,fp);					//read the file data into the data area in packet
 
   /*** the whole file is loaded in the buffer. ***/
 	buf[lsize] = '0';

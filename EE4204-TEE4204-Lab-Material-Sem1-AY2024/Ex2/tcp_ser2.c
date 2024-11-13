@@ -82,8 +82,6 @@ void str_ser(int sockfd)
 		printf("**loop start***");
 		printf("end:%d\n",end);
 		n= recv(sockfd, &recvs, DATALEN, 0);
-		if(recvs.num == 1)
-			printf("\n*****Sender couldn't received *****\n");
 		if (n==-1)                                   //receive the packet
 		{
 			printf("receiving error!\n");
@@ -94,7 +92,7 @@ void str_ser(int sockfd)
 		if(random >= ACK_LOSS_PROBABILITY){
 			printf("send ack\n");
 			send(sockfd, &ack, 2, 0);//send ACK or NACK
-			if (recvs.data[n-1] == '\0')
+			if (recvs[n-1] == '\0')
 			{
 				end = 1;
 				n --;
