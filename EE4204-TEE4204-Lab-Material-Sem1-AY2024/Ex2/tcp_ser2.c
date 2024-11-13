@@ -77,10 +77,10 @@ void str_ser(int sockfd)
 
 	ack.len = 0;
 	ack.num = 1;
+	int receive_count =0;
 	srand((unsigned)time(NULL));	//for random fail
 	while(!end){
-		printf("**loop start***");
-		printf("end:%d\n",end);
+		printf("[%d]th recieving\n",receive_count);
 		n= recv(sockfd, &recvs, DATALEN, 0);
 		if (n==-1)                                   //receive the packet
 		{
@@ -103,6 +103,7 @@ void str_ser(int sockfd)
 		else {
 			printf("random : %f \nACK lost, wait resend from Client \n",random);
 		}
+		receive_count++;
 	}
 	double random = (double)rand() / RAND_MAX;
 	if(random >= ACK_LOSS_PROBABILITY){
