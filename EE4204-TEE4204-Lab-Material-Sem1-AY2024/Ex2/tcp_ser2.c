@@ -68,12 +68,11 @@ void str_ser(int sockfd)
 {
 	char buf[BUFSIZE];
 	FILE *fp;
-	//struct pack_so recvs;
 	char recvs[DATALEN];
 	struct ack_so ack;
-	int end, n = 0, ci, lsize=1;
+	int end, n = 0;
 	long lseek=0;
-	ci = end = ack.num = 0;
+	end = 0;
 
 	ack.len = 0;
 	ack.num = 1;
@@ -113,6 +112,7 @@ void str_ser(int sockfd)
 	}
 	printf("the data received: %d\n", ci);
 	printf("the file size received: %d\n", lsize);
+	printf("lseek :  %d\n",lseek);
 	fwrite (buf , 1 , lseek, fp);								//write the data into file
 	fclose(fp);
 	printf("a file has been successfully received!\n");

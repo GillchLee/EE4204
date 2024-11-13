@@ -123,10 +123,12 @@ float str_cli(FILE *fp, int sockfd, long *len)
 		else
 			slen = DATALEN;
 		printf("slen :%ld\n",slen);
-		memcpy(sends, (buf+ci), slen);
+//		memcpy(sends, (buf+ci), slen);
 		sent = 0;
 		while(!sent){		// recv ack and if not, resend.
 			printf("***send start\n");
+		memcpy(sends, (buf+ci), slen);
+
 			n=send(sockfd, &sends, slen, 0);		//send the data in one packet
 			if (n == -1)	{			
 				printf("error sending data\n");
