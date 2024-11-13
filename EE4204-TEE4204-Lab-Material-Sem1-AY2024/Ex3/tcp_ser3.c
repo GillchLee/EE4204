@@ -78,10 +78,11 @@ void str_ser(int sockfd)
 	end = 0;
 	
 	printf("receiving data!\n");
-
+	int count = 0;
 	while(!end)
 	{
-		printf("\n n is : %d\n",n);
+		count ++;
+		printf("\n count is : %d\n",count);
 		if ((n= recv(sockfd, &recvs, DATALEN, 0))==-1)                                   //receive the packet
 		{
 			printf("error when receiving\n");
