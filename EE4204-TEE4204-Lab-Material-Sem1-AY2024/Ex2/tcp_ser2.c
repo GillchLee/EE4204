@@ -110,9 +110,8 @@ void str_ser(int sockfd)
 		printf("File doesn't exit\n");
 		exit(0);
 	}
-	printf("the data received: %d\n", ci);
-	printf("the file size received: %d\n", lsize);
-	printf("lseek :  %d\n",lseek);
+
+	printf("a file has been successfully received!\nthe total data received is %d bytes\n", (int)lseek);
 	fwrite (buf , 1 , lseek, fp);								//write the data into file
 	fclose(fp);
 	printf("a file has been successfully received!\n");
