@@ -25,12 +25,12 @@
 #define BUFSIZE 31000
 #define N 1
 #define HEADLEN 8
-
+#define DATALEN 500
 struct pack_so			//data packet structure
 {
 uint32_t num;				// the sequence number
 uint32_t len;					// the packet length
-char data[MAXLEN];	//the packet data
+char data[DATALEN];	//the packet data
 };
 
 struct ack_so
