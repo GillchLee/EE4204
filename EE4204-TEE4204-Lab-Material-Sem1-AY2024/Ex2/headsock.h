@@ -14,7 +14,7 @@
 
 #include <time.h>
 
-#define ACK_LOSS_PROBABILITY 0.05 // 30% 확률로 ACK를 보내지 않음
+#define ACK_LOSS_PROBABILITY 0 // 30% 확률로 ACK를 보내지 않음
 
 #define NEWFILE (O_WRONLY|O_CREAT|O_TRUNC)
 #define MYTCP_PORT 4950
