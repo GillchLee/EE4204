@@ -68,40 +68,44 @@ void str_ser(int sockfd)
 {
 	char buf[BUFSIZE];
 	FILE *fp;
-	struct pack_so recvs;
+	//struct pack_so recvs;
+	char recvs[DATALEN];
 	struct ack_so ack;
 	int end, n = 0, ci, lsize=1;
+	long lseek=0;
 	ci = end = ack.num = 0;
-	srand((unsigned)time(NULL));
-	printf(" [[[[[[[[[%d, %d, %d]]]]]]]]]\n ",end,ci,lsize);
-while(!end){
-	printf("**loop again**");
-	printf("end:%d\n",end);
-	n= recv(sockfd, &recvs, MAXSIZE, 0);
-	if(recvs.num == 1)
-		printf("\n*****fail received*****\n");
-	while(ci < lsize)
-	{
-		printf("**flag1**");
+
+	ack.len = 0;
+	ack.num = 1;
+	srand((unsigned)time(NULL));	//for random fail
+	while(!end){
+		printf("**loop start***");
+		printf("end:%d\n",end);
+		n= recv(sockfd, &recvs, DATALEN, 0);
+		if(recvs.num == 1)
+			printf("\n*****Sender couldn't received *****\n");
 		if (n==-1)                                   //receive the packet
 		{
 			printf("receiving error!\n");
 			return;
 		}
 		else printf("%d data received\n", n);
-		if (ci == 0) {
-			lsize = recvs.len;								//copy the data length
-			memcpy(buf, recvs.data, (n-HEADLEN));			//copy the data
-			ci += n-HEADLEN;
+		double random = (double)rand() / RAND_MAX;
+		if(random >= ACK_LOSS_PROBABILITY){
+			printf("send ack\n");
+			send(sockfd, &ack, 2, 0);//send ACK or NACK
+			if (recvs.data[n-1] == '\0')
+			{
+				end = 1;
+				n --;
+			}
+			memcpy(buf+lseek, recvs, n);			//copy the data
+			lseek += n;		
 		}
 		else {
-			memcpy((buf+ci), &recvs, n);
-			ci += n;
+			printf("random : %f \nACK lost, wait resend from Client \n",random);
 		}
 	}
-	ack.len = 0;
-	ack.num = 1;
-//	memcpy(buf, recvs.data, recvs.len);
 	double random = (double)rand() / RAND_MAX;
 	if(random >= ACK_LOSS_PROBABILITY){
 		printf("send ack\n");
@@ -111,8 +115,7 @@ while(!end){
 	else{
 		printf("ACK lost");
 	}
-	printf("\nloop end\n");
-}
+
 	if((fp = fopen ("myTCPreceive.txt","wt")) == NULL)
 	{
 		printf("File doesn't exit\n");
@@ -120,7 +123,7 @@ while(!end){
 	}
 	printf("the data received: %d\n", ci);
 	printf("the file size received: %d\n", lsize);
-	fwrite (buf , 1 , lsize, fp);								//write the data into file
+	fwrite (buf , 1 , lseek, fp);								//write the data into file
 	fclose(fp);
 	printf("a file has been successfully received!\n");
 }

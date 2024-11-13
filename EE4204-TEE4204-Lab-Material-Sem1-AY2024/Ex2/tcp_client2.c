@@ -89,9 +89,10 @@ float str_cli(FILE *fp, int sockfd, long *len)
 {
 	char *buf;
 	long lsize, ci;
-	struct pack_so sends;
+	//struct pack_so sends;
+	char sends[DATALEN];
 	struct ack_so acks;
-	int n;
+	int n, slen;
 	float time_inv = 0.0;
 	struct timeval sendt, recvt;
 	ci = 0;
@@ -112,8 +113,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 	buf[lsize] = '0';
 	gettimeofday(&sendt, NULL);							//get the current time
 
-	sends.len = lsize;									//the data length
-	sends.num = 0;
+
 	int sent = 0;
 	int error_count = 0;
 	int send_count = 0;
@@ -123,7 +123,6 @@ float str_cli(FILE *fp, int sockfd, long *len)
 		else
 			slen = DATALEN;
 		memcpy(sends, (buf+ci), slen);
-		sends.num=0;		// reset receive fail flag
 		while(!sent){		// recv ack and if not, resend.
 			printf("***send start\n");
 			n=send(sockfd, &sends, slen, 0);		//send the data in one packet
@@ -145,7 +144,6 @@ float str_cli(FILE *fp, int sockfd, long *len)
 			{
 				error_count++;
 				printf("ACK not received..., Error count : %d\n",error_count);
-				sends.num=1;	// Sending that Server's ACK was fail.
 				sleep(1);
 			}
 		}
