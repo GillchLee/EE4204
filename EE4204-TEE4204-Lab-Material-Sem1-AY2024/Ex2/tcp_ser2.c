@@ -105,7 +105,7 @@ void str_ser(int sockfd)
 		}
 		receive_count++;
 	}
-
+	printf(" loop end \n");
 	if((fp = fopen ("myTCPreceive.txt","wt")) == NULL)
 	{
 		printf("File doesn't exit\n");

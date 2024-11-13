@@ -122,6 +122,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 			slen = lsize+1-ci;
 		else
 			slen = DATALEN;
+		printf("slen :%ld\n",slen);
 		memcpy(sends, (buf+ci), slen);
 		sent = 0;
 		while(!sent){		// recv ack and if not, resend.

@@ -115,6 +115,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 			exit(1);
 		}
 		ci += slen;
+		printf("slen :%ld\n",slen);
 	}
 	if ((n= recv(sockfd, &ack, 2, 0))==-1)                                   //receive the ack
 	{
