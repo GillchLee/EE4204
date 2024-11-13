@@ -145,11 +145,11 @@ float str_cli(FILE *fp, int sockfd, long *len)
 			{
 				error_count++;
 				printf("ACK not received..., Error count : %d\n",error_count);
-				sleep(1);
 			}
 		}
 		ci += slen;
 	}
+	printf("\n [loop end] \n");
 	gettimeofday(&recvt, NULL);  
 	*len = ci;                                                       //get current time
 	tv_sub(&recvt, &sendt);                                                                 // get the whole trans time

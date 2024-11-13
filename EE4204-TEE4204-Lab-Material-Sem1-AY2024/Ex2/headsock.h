@@ -14,7 +14,7 @@
 
 #include <time.h>
 
-#define ACK_LOSS_PROBABILITY 0.3 // 30% 확률로 ACK를 보내지 않음
+#define ACK_LOSS_PROBABILITY 0.1 // 30% 확률로 ACK를 보내지 않음
 
 #define NEWFILE (O_WRONLY|O_CREAT|O_TRUNC)
 #define MYTCP_PORT 4950
@@ -25,7 +25,7 @@
 #define BUFSIZE 31000
 #define N 1
 #define HEADLEN 8
-#define DATALEN 500
+#define DATALEN 1000
 struct pack_so			//data packet structure
 {
 uint32_t num;				// the sequence number
