@@ -110,7 +110,7 @@ float str_cli(FILE *fp, int sockfd, long *len)
 	fread (buf,1,lsize,fp);					//read the file data into the data area in packet
 
   /*** the whole file is loaded in the buffer. ***/
-	buf[lsize] = '0';
+	buf[lsize] = '\0';
 	gettimeofday(&sendt, NULL);							//get the current time
 
 
